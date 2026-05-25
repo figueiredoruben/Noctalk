@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Salle Secrète</title>
+  <title>NocTalk</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -27,6 +27,7 @@
       --btn-fg: #000000;
       --btn-bg: #ffffff;
     }
+
     body.day {
       --bg: #ffffff;
       --bg2: #f5f5f5;
@@ -73,12 +74,10 @@
       transition: background 0.25s, color 0.25s;
     }
 
-    /* ── SCREENS ── */
     .screen { display: none; width: 100%; max-width: 420px; }
     .screen.active { display: block; }
     #chat-screen { max-width: 660px; }
 
-    /* ── LOGIN ── */
     .login-card {
       background: var(--bg2);
       border: 1px solid var(--border);
@@ -99,16 +98,11 @@
     .login-card h1 { font-size: 22px; font-weight: 600; margin-bottom: 6px; }
     .login-card p { font-size: 14px; color: var(--text2); margin-bottom: 1.75rem; line-height: 1.6; }
 
-    .field {
-      position: relative;
-      margin-bottom: 12px;
-    }
+    .field { position: relative; margin-bottom: 12px; }
     .field i {
       position: absolute;
       left: 13px; top: 50%; transform: translateY(-50%);
-      font-size: 17px;
-      color: var(--text3);
-      pointer-events: none;
+      font-size: 17px; color: var(--text3); pointer-events: none;
     }
     .field input {
       width: 100%;
@@ -140,11 +134,10 @@
     .btn-primary:hover { opacity: 0.85; }
     .btn-primary:active { transform: scale(0.98); }
 
-    .err { font-size: 13px; color: var(--red); margin-top: 10px; min-height: 18px; }
+    .err { font-size: 13px; color: #ff5c5c; margin-top: 10px; min-height: 18px; }
     .hint { font-size: 12px; color: var(--text3); margin-top: 14px; }
     .hint span { color: var(--text); }
 
-    /* ── CHAT ── */
     .chat-wrap {
       background: var(--bg2);
       border: 1px solid var(--border);
@@ -170,14 +163,11 @@
       background: var(--accent-dim);
       border: 1px solid var(--accent-border);
       display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
-      color: var(--accent);
-      flex-shrink: 0;
+      font-size: 16px; color: var(--accent); flex-shrink: 0;
     }
     .room-name { font-weight: 600; font-size: 15px; }
     .room-sub { font-size: 12px; color: var(--text2); margin-top: 2px; display: flex; align-items: center; gap: 5px; }
     .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); display: inline-block; }
-    .dot.red { background: var(--red); }
 
     .btn-leave {
       margin-left: auto;
@@ -191,7 +181,7 @@
       display: flex; align-items: center; gap: 5px;
       transition: border-color 0.2s, color 0.2s;
     }
-    .btn-leave:hover { border-color: var(--red); color: var(--red); }
+    .btn-leave:hover { border-color: #ff5c5c; color: #ff5c5c; }
 
     .messages {
       flex: 1;
@@ -205,12 +195,7 @@
     .messages::-webkit-scrollbar { width: 4px; }
     .messages::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
-    .sys-msg {
-      text-align: center;
-      font-size: 12px;
-      color: var(--text3);
-      padding: 2px 0;
-    }
+    .sys-msg { text-align: center; font-size: 12px; color: var(--text3); padding: 2px 0; }
 
     .msg { display: flex; gap: 9px; align-items: flex-end; }
     .msg.me { flex-direction: row-reverse; }
@@ -222,8 +207,7 @@
       border: 1px solid var(--border);
       display: flex; align-items: center; justify-content: center;
       font-size: 12px; font-weight: 600;
-      color: var(--text2);
-      flex-shrink: 0;
+      color: var(--text2); flex-shrink: 0;
     }
 
     .msg-body { max-width: 72%; display: flex; flex-direction: column; gap: 3px; }
@@ -249,23 +233,18 @@
 
     .empty-state {
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
       color: var(--text3);
-      font-size: 14px;
-      gap: 10px;
-      text-align: center;
-      padding: 2rem;
+      font-size: 14px; gap: 10px;
+      text-align: center; padding: 2rem;
     }
     .empty-state i { font-size: 36px; }
 
     .chat-footer {
       padding: 12px 16px;
       border-top: 1px solid var(--border);
-      display: flex;
-      gap: 8px;
+      display: flex; gap: 8px;
       background: var(--bg2);
     }
     .chat-footer input {
@@ -275,8 +254,7 @@
       border: 1px solid var(--border);
       border-radius: var(--radius);
       color: var(--text);
-      font-size: 14px;
-      outline: none;
+      font-size: 14px; outline: none;
       transition: border-color 0.2s;
     }
     .chat-footer input:focus { border-color: var(--accent-border); }
@@ -286,18 +264,20 @@
       width: 42px; height: 42px;
       border-radius: var(--radius);
       background: var(--btn-bg);
-      border: none;
-      color: var(--btn-fg);
+      border: none; color: var(--btn-fg);
       font-size: 18px;
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-      flex-shrink: 0;
+      cursor: pointer; flex-shrink: 0;
       transition: opacity 0.2s, transform 0.1s, background 0.25s, color 0.25s;
     }
     .btn-send:hover { opacity: 0.75; }
     .btn-send:active { transform: scale(0.95); }
 
-    /* notification toast */
+    .connecting {
+      text-align: center; padding: 2rem;
+      color: var(--text3); font-size: 14px;
+    }
+
     .toast {
       position: fixed;
       bottom: 24px; left: 50%; transform: translateX(-50%);
@@ -305,12 +285,10 @@
       border: 1px solid var(--border2);
       border-radius: var(--radius);
       padding: 10px 20px;
-      font-size: 13px;
-      color: var(--text2);
-      opacity: 0;
-      transition: opacity 0.3s;
-      pointer-events: none;
-      white-space: nowrap;
+      font-size: 13px; color: var(--text2);
+      opacity: 0; transition: opacity 0.3s;
+      pointer-events: none; white-space: nowrap;
+      z-index: 9999;
     }
     .toast.show { opacity: 1; }
 
@@ -328,13 +306,12 @@
   <i class="ti ti-sun" id="theme-icon"></i>
 </button>
 
-<!-- ── LOGIN SCREEN ── -->
+<!-- LOGIN -->
 <div class="screen active" id="login-screen">
   <div class="login-card">
     <div class="lock-wrap"><i class="ti ti-lock"></i></div>
-    <h1>Salle Secrète</h1>
+    <h1>NocTalk</h1>
     <p>Entre ton pseudo et le mot de passe de la salle.<br>Tous ceux qui ont le même code se retrouvent ici.</p>
-
     <div class="field">
       <i class="ti ti-user"></i>
       <input id="name-input" type="text" placeholder="Ton pseudo" maxlength="20" autocomplete="off" />
@@ -347,13 +324,12 @@
     <button class="btn-primary" onclick="joinRoom()">
       <i class="ti ti-arrow-right"></i> Rejoindre la salle
     </button>
-
     <div class="err" id="err-msg"></div>
     <p class="hint">Pas encore de salle ? Elle sera créée automatiquement.<br>Partage le mot de passe avec tes amis — <span>c'est tout</span>.</p>
   </div>
 </div>
 
-<!-- ── CHAT SCREEN ── -->
+<!-- CHAT -->
 <div class="screen" id="chat-screen">
   <div class="chat-wrap">
     <div class="chat-header">
@@ -369,14 +345,9 @@
         <i class="ti ti-logout"></i> Quitter
       </button>
     </div>
-
     <div class="messages" id="messages">
-      <div class="empty-state">
-        <i class="ti ti-message-off"></i>
-        <span>Aucun message.<br>Sois le premier à parler !</span>
-      </div>
+      <div class="connecting"><i class="ti ti-loader"></i> Connexion...</div>
     </div>
-
     <div class="chat-footer">
       <input id="msg-input" type="text" placeholder="Écris un message…" maxlength="400" autocomplete="off"
              onkeydown="if(event.key==='Enter')sendMsg()" />
@@ -389,253 +360,166 @@
 
 <div class="toast" id="toast"></div>
 
-<script>
-// ─────────────────────────────────────────
-//  THEME TOGGLE
-// ─────────────────────────────────────────
-let isDay = false;
-function toggleTheme() {
-  isDay = !isDay;
-  document.body.classList.toggle('day', isDay);
-  document.getElementById('theme-icon').className = isDay ? 'ti ti-moon' : 'ti ti-sun';
-}
+<!-- FIREBASE -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import {
+    getDatabase, ref, push, onValue, set, remove, onDisconnect, serverTimestamp, off
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-// ─────────────────────────────────────────
-//  STATE
-// ─────────────────────────────────────────
-const STORE = 'salle_secrete_v2';
-const HEARTBEAT_MS  = 2000;   // ping toutes les 2s
-const TIMEOUT_MS    = 6000;   // mort si pas de ping depuis 6s
-const POLL_MS       = 1500;   // refresh UI
+  const firebaseConfig = {
+    apiKey: "AIzaSyBUfur-fdKm-ZT-th22ndI1YQe5nqVctck",
+    authDomain: "noctalk-282fb.firebaseapp.com",
+    databaseURL: "https://noctalk-282fb-default-rtdb.firebaseio.com",
+    projectId: "noctalk-282fb",
+    storageBucket: "noctalk-282fb.firebasestorage.app",
+    messagingSenderId: "277070966276",
+    appId: "1:277070966276:web:dcce25002fbd2044b08f51"
+  };
 
-let myName = '';
-let myRoom = '';
-let pollTimer = null;
-let heartTimer = null;
-let lastCount = 0;
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
 
-// ─────────────────────────────────────────
-//  STORAGE HELPERS
-// ─────────────────────────────────────────
-function load() {
-  try { return JSON.parse(localStorage.getItem(STORE) || '{}'); } catch { return {}; }
-}
-function save(data) {
-  try { localStorage.setItem(STORE, JSON.stringify(data)); } catch {}
-}
+  let myName = '';
+  let myRoom = '';
+  let myPresenceRef = null;
+  let messagesRef = null;
+  let presenceRef = null;
+  let isDay = false;
 
-function getRoom(data, key) {
-  if (!data[key]) data[key] = { messages: [], users: {} };
-  return data[key];
-}
+  // ── THEME ──
+  window.toggleTheme = function() {
+    isDay = !isDay;
+    document.body.classList.toggle('day', isDay);
+    document.getElementById('theme-icon').className = isDay ? 'ti ti-moon' : 'ti ti-sun';
+  };
 
-// ─────────────────────────────────────────
-//  JOIN / LEAVE
-// ─────────────────────────────────────────
-function joinRoom() {
-  const name = document.getElementById('name-input').value.trim();
-  const pass = document.getElementById('pass-input').value.trim();
-  const err  = document.getElementById('err-msg');
-  if (!name) { err.textContent = 'Entre ton pseudo.'; return; }
-  if (name.length < 2) { err.textContent = 'Pseudo trop court (min 2 caractères).'; return; }
-  if (!pass) { err.textContent = 'Entre un mot de passe.'; return; }
-  err.textContent = '';
+  // ── JOIN ──
+  window.joinRoom = async function() {
+    const name = document.getElementById('name-input').value.trim();
+    const pass = document.getElementById('pass-input').value.trim();
+    const err  = document.getElementById('err-msg');
+    if (!name) { err.textContent = 'Entre ton pseudo.'; return; }
+    if (name.length < 2) { err.textContent = 'Pseudo trop court.'; return; }
+    if (!pass) { err.textContent = 'Entre un mot de passe.'; return; }
+    err.textContent = '';
 
-  myName = name;
-  myRoom = pass;
+    myName = name;
+    myRoom = pass;
 
-  // Enregistre l'utilisateur
-  let data = load();
-  let room = getRoom(data, myRoom);
-  room.users[myName] = Date.now();
-  addSysMsg(data, `${myName} a rejoint la salle. 👋`);
-  save(data);
+    // Présence
+    presenceRef  = ref(db, `rooms/${myRoom}/presence`);
+    myPresenceRef = ref(db, `rooms/${myRoom}/presence/${myName}`);
+    await set(myPresenceRef, { name: myName, joinedAt: serverTimestamp() });
 
-  // Affiche le chat
-  document.getElementById('room-display').textContent = '🔒 ' + myRoom;
-  switchScreen('chat-screen');
-  renderMessages();
+    // Quand l'utilisateur ferme l'onglet → Firebase supprime sa présence
+    onDisconnect(myPresenceRef).remove();
 
-  // Lance les timers
-  heartTimer = setInterval(heartbeat, HEARTBEAT_MS);
-  pollTimer  = setInterval(tick, POLL_MS);
-}
+    // Message système
+    messagesRef = ref(db, `rooms/${myRoom}/messages`);
+    await push(messagesRef, { type: 'sys', text: `${myName} a rejoint la salle. 👋`, ts: Date.now() });
 
-function leaveRoom() {
-  clearInterval(heartTimer);
-  clearInterval(pollTimer);
+    // Affiche le chat
+    document.getElementById('room-display').textContent = '🔒 ' + myRoom;
+    switchScreen('chat-screen');
+    listenMessages();
+    listenPresence();
+  };
 
-  let data = load();
-  if (data[myRoom]) {
-    delete data[myRoom].users[myName];
-    // Si plus personne → on efface les messages
-    const alive = activeUsers(data[myRoom].users);
-    if (alive.length === 0) {
-      data[myRoom].messages = [];
-      showToast('Salle vide — messages effacés.');
-    } else {
-      addSysMsg(data, `${myName} a quitté la salle.`);
+  // ── LEAVE ──
+  window.leaveRoom = async function() {
+    if (messagesRef) off(messagesRef);
+    if (presenceRef) off(presenceRef);
+
+    if (myPresenceRef) {
+      await remove(myPresenceRef);
+
+      // Vérifie si la salle est vide → supprime les messages
+      const snap = await new Promise(res => onValue(presenceRef, res, { onlyOnce: true }));
+      if (!snap.exists()) {
+        await remove(ref(db, `rooms/${myRoom}/messages`));
+        showToast('Salle vide — messages effacés.');
+      } else {
+        await push(messagesRef, { type: 'sys', text: `${myName} a quitté la salle.`, ts: Date.now() });
+      }
     }
-    save(data);
+
+    myName = ''; myRoom = '';
+    myPresenceRef = null; messagesRef = null; presenceRef = null;
+    document.getElementById('msg-input').value = '';
+    document.getElementById('messages').innerHTML = '<div class="connecting">Connexion...</div>';
+    switchScreen('login-screen');
+  };
+
+  // ── SEND ──
+  window.sendMsg = async function() {
+    const inp  = document.getElementById('msg-input');
+    const text = inp.value.trim();
+    if (!text || !messagesRef) return;
+    inp.value = '';
+    await push(messagesRef, { type: 'msg', author: myName, text, ts: Date.now() });
+  };
+
+  // ── LISTEN MESSAGES ──
+  function listenMessages() {
+    onValue(messagesRef, snap => {
+      const el = document.getElementById('messages');
+      if (!snap.exists()) {
+        el.innerHTML = `<div class="empty-state"><i class="ti ti-message-off"></i><span>Aucun message.<br>Sois le premier à parler !</span></div>`;
+        return;
+      }
+      el.innerHTML = '';
+      snap.forEach(child => {
+        const m = child.val();
+        if (m.type === 'sys') {
+          const d = document.createElement('div');
+          d.className = 'sys-msg';
+          d.textContent = m.text;
+          el.appendChild(d);
+        } else {
+          const isMe = m.author === myName;
+          const wrap = document.createElement('div');
+          wrap.className = 'msg' + (isMe ? ' me' : '');
+          wrap.innerHTML = `
+            <div class="avatar">${esc(m.author).slice(0,2).toUpperCase()}</div>
+            <div class="msg-body">
+              <div class="msg-meta">${isMe ? 'Toi' : esc(m.author)} · ${fmt(m.ts)}</div>
+              <div class="bubble">${esc(m.text)}</div>
+            </div>`;
+          el.appendChild(wrap);
+        }
+      });
+      el.scrollTop = el.scrollHeight;
+    });
   }
 
-  myName = ''; myRoom = ''; lastCount = 0;
-  switchScreen('login-screen');
-  document.getElementById('msg-input').value = '';
-}
-
-// Fermeture de l'onglet / refresh
-window.addEventListener('beforeunload', () => {
-  if (!myName || !myRoom) return;
-  let data = load();
-  if (!data[myRoom]) return;
-  delete data[myRoom].users[myName];
-  const alive = activeUsers(data[myRoom].users);
-  if (alive.length === 0) data[myRoom].messages = [];
-  else addSysMsg(data, `${myName} a quitté la salle.`);
-  save(data);
-});
-
-// ─────────────────────────────────────────
-//  HEARTBEAT — maintient la présence
-// ─────────────────────────────────────────
-function heartbeat() {
-  if (!myRoom) return;
-  let data = load();
-  let room = getRoom(data, myRoom);
-  room.users[myName] = Date.now();
-  save(data);
-}
-
-// ─────────────────────────────────────────
-//  TICK — synchronise l'UI
-// ─────────────────────────────────────────
-function tick() {
-  if (!myRoom) return;
-  let data = load();
-  let room  = getRoom(data, myRoom);
-
-  // Nettoie les utilisateurs morts
-  let changed = false;
-  for (const [u, ts] of Object.entries(room.users)) {
-    if (Date.now() - ts > TIMEOUT_MS) {
-      delete room.users[u];
-      // si quelqu'un est mort sans laisser de message de départ
-      addSysMsg(data, `${u} a été déconnecté.`);
-      changed = true;
-    }
+  // ── LISTEN PRESENCE ──
+  function listenPresence() {
+    onValue(presenceRef, snap => {
+      const count = snap.exists() ? Object.keys(snap.val()).length : 0;
+      document.getElementById('online-count').textContent = count;
+    });
   }
 
-  // Si plus personne (sans moi-même), on efface
-  const others = Object.keys(room.users).filter(u => u !== myName);
-  const aliveCount = others.length + 1; // +1 pour moi
-
-  if (changed) {
-    const aliveAfter = activeUsers(room.users);
-    if (aliveAfter.length === 0) room.messages = [];
-    save(data);
+  // ── UTILS ──
+  function fmt(ts) {
+    const d = new Date(ts);
+    return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
   }
-
-  // Met à jour l'UI online
-  document.getElementById('online-count').textContent = aliveCount;
-  const dot = document.getElementById('dot');
-  if (aliveCount > 1) { dot.classList.remove('red'); }
-  else { dot.classList.add('red'); }
-
-  // Refresh messages si changement
-  const msgs = (data[myRoom] || {}).messages || [];
-  if (msgs.length !== lastCount) {
-    renderMessages();
-    lastCount = msgs.length;
+  function esc(t) {
+    return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
-}
-
-// ─────────────────────────────────────────
-//  MESSAGES
-// ─────────────────────────────────────────
-function sendMsg() {
-  const inp  = document.getElementById('msg-input');
-  const text = inp.value.trim();
-  if (!text) return;
-  inp.value = '';
-
-  let data = load();
-  let room = getRoom(data, myRoom);
-  room.messages.push({ type: 'msg', author: myName, text, ts: Date.now() });
-  if (room.messages.length > 300) room.messages = room.messages.slice(-300);
-  save(data);
-  renderMessages();
-  lastCount = room.messages.length;
-}
-
-function addSysMsg(data, text) {
-  let room = getRoom(data, myRoom);
-  room.messages.push({ type: 'sys', text, ts: Date.now() });
-}
-
-function renderMessages() {
-  let data = load();
-  const msgs = (data[myRoom] || {}).messages || [];
-  const el   = document.getElementById('messages');
-  lastCount  = msgs.length;
-
-  if (msgs.length === 0) {
-    el.innerHTML = `<div class="empty-state"><i class="ti ti-message-off"></i><span>Aucun message.<br>Sois le premier à parler !</span></div>`;
-    return;
+  function switchScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
   }
-
-  el.innerHTML = '';
-  msgs.forEach(m => {
-    if (m.type === 'sys') {
-      const d = document.createElement('div');
-      d.className = 'sys-msg';
-      d.textContent = m.text;
-      el.appendChild(d);
-      return;
-    }
-    const isMe = m.author === myName;
-    const wrap = document.createElement('div');
-    wrap.className = 'msg' + (isMe ? ' me' : '');
-    const initials = m.author.slice(0, 2).toUpperCase();
-    wrap.innerHTML = `
-      <div class="avatar">${initials}</div>
-      <div class="msg-body">
-        <div class="msg-meta">${isMe ? 'Toi' : esc(m.author)} · ${fmt(m.ts)}</div>
-        <div class="bubble">${esc(m.text)}</div>
-      </div>`;
-    el.appendChild(wrap);
-  });
-
-  el.scrollTop = el.scrollHeight;
-}
-
-// ─────────────────────────────────────────
-//  UTILS
-// ─────────────────────────────────────────
-function activeUsers(usersObj) {
-  return Object.entries(usersObj).filter(([, ts]) => Date.now() - ts <= TIMEOUT_MS).map(([u]) => u);
-}
-
-function fmt(ts) {
-  const d = new Date(ts);
-  return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
-}
-
-function esc(t) {
-  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-function switchScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+  window.showToast = showToast;
 </script>
 </body>
 </html>
