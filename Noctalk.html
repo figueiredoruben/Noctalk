@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Salle Secrète</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #000000;
+      --bg2: #0a0a0a;
+      --bg3: #141414;
+      --border: rgba(255,255,255,0.10);
+      --border2: rgba(255,255,255,0.18);
+      --text: #ffffff;
+      --text2: #888888;
+      --text3: #444444;
+      --accent: #ffffff;
+      --accent-dim: rgba(255,255,255,0.06);
+      --accent-border: rgba(255,255,255,0.25);
+      --green: #aaaaaa;
+      --red: #666666;
+      --radius: 10px;
+      --radius-lg: 16px;
+      --btn-fg: #000000;
+      --btn-bg: #ffffff;
+    }
+    body.day {
+      --bg: #ffffff;
+      --bg2: #f5f5f5;
+      --bg3: #ebebeb;
+      --border: rgba(0,0,0,0.10);
+      --border2: rgba(0,0,0,0.18);
+      --text: #000000;
+      --text2: #555555;
+      --text3: #aaaaaa;
+      --accent: #000000;
+      --accent-dim: rgba(0,0,0,0.05);
+      --accent-border: rgba(0,0,0,0.22);
+      --green: #555555;
+      --red: #999999;
+      --btn-fg: #ffffff;
+      --btn-bg: #000000;
+    }
+
+    #theme-toggle {
+      position: fixed;
+      top: 16px; right: 16px;
+      z-index: 999;
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background 0.25s, border-color 0.25s, color 0.25s, transform 0.15s;
+    }
+    #theme-toggle:hover { transform: scale(1.1); }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      transition: background 0.25s, color 0.25s;
+    }
+
+    /* ── SCREENS ── */
+    .screen { display: none; width: 100%; max-width: 420px; }
+    .screen.active { display: block; }
+    #chat-screen { max-width: 660px; }
+
+    /* ── LOGIN ── */
+    .login-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+    .lock-wrap {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent-border);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.25rem;
+      font-size: 26px;
+      color: var(--accent);
+    }
+    .login-card h1 { font-size: 22px; font-weight: 600; margin-bottom: 6px; }
+    .login-card p { font-size: 14px; color: var(--text2); margin-bottom: 1.75rem; line-height: 1.6; }
+
+    .field {
+      position: relative;
+      margin-bottom: 12px;
+    }
+    .field i {
+      position: absolute;
+      left: 13px; top: 50%; transform: translateY(-50%);
+      font-size: 17px;
+      color: var(--text3);
+      pointer-events: none;
+    }
+    .field input {
+      width: 100%;
+      padding: 11px 14px 11px 40px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .field input:focus { border-color: var(--accent-border); }
+    .field input::placeholder { color: var(--text3); }
+
+    .btn-primary {
+      width: 100%;
+      padding: 11px;
+      background: var(--btn-bg);
+      border: none;
+      border-radius: var(--radius);
+      color: var(--btn-fg);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: opacity 0.2s, transform 0.1s, background 0.25s, color 0.25s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-primary:active { transform: scale(0.98); }
+
+    .err { font-size: 13px; color: var(--red); margin-top: 10px; min-height: 18px; }
+    .hint { font-size: 12px; color: var(--text3); margin-top: 14px; }
+    .hint span { color: var(--text); }
+
+    /* ── CHAT ── */
+    .chat-wrap {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 88vh;
+      max-height: 640px;
+    }
+
+    .chat-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg2);
+    }
+    .room-icon {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent-border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .room-name { font-weight: 600; font-size: 15px; }
+    .room-sub { font-size: 12px; color: var(--text2); margin-top: 2px; display: flex; align-items: center; gap: 5px; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); display: inline-block; }
+    .dot.red { background: var(--red); }
+
+    .btn-leave {
+      margin-left: auto;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 6px 12px;
+      color: var(--text2);
+      font-size: 13px;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 5px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-leave:hover { border-color: var(--red); color: var(--red); }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      scroll-behavior: smooth;
+    }
+    .messages::-webkit-scrollbar { width: 4px; }
+    .messages::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+    .sys-msg {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text3);
+      padding: 2px 0;
+    }
+
+    .msg { display: flex; gap: 9px; align-items: flex-end; }
+    .msg.me { flex-direction: row-reverse; }
+
+    .avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 600;
+      color: var(--text2);
+      flex-shrink: 0;
+    }
+
+    .msg-body { max-width: 72%; display: flex; flex-direction: column; gap: 3px; }
+    .msg.me .msg-body { align-items: flex-end; }
+    .msg-meta { font-size: 11px; color: var(--text3); padding: 0 4px; }
+
+    .bubble {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 12px 12px 12px 4px;
+      padding: 9px 13px;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--text);
+      word-break: break-word;
+    }
+    .msg.me .bubble {
+      background: var(--btn-bg);
+      border-color: transparent;
+      color: var(--btn-fg);
+      border-radius: 12px 12px 4px 12px;
+    }
+
+    .empty-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text3);
+      font-size: 14px;
+      gap: 10px;
+      text-align: center;
+      padding: 2rem;
+    }
+    .empty-state i { font-size: 36px; }
+
+    .chat-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+      background: var(--bg2);
+    }
+    .chat-footer input {
+      flex: 1;
+      padding: 10px 14px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .chat-footer input:focus { border-color: var(--accent-border); }
+    .chat-footer input::placeholder { color: var(--text3); }
+
+    .btn-send {
+      width: 42px; height: 42px;
+      border-radius: var(--radius);
+      background: var(--btn-bg);
+      border: none;
+      color: var(--btn-fg);
+      font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: opacity 0.2s, transform 0.1s, background 0.25s, color 0.25s;
+    }
+    .btn-send:hover { opacity: 0.75; }
+    .btn-send:active { transform: scale(0.95); }
+
+    /* notification toast */
+    .toast {
+      position: fixed;
+      bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 10px 20px;
+      font-size: 13px;
+      color: var(--text2);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; }
+
+    @media (max-width: 480px) {
+      .login-card { padding: 1.75rem 1.25rem; }
+      .chat-wrap { height: 100vh; max-height: 100vh; border-radius: 0; }
+      body { padding: 0; align-items: flex-start; }
+      #chat-screen { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<button id="theme-toggle" onclick="toggleTheme()" title="Changer le thème">
+  <i class="ti ti-sun" id="theme-icon"></i>
+</button>
+
+<!-- ── LOGIN SCREEN ── -->
+<div class="screen active" id="login-screen">
+  <div class="login-card">
+    <div class="lock-wrap"><i class="ti ti-lock"></i></div>
+    <h1>Salle Secrète</h1>
+    <p>Entre ton pseudo et le mot de passe de la salle.<br>Tous ceux qui ont le même code se retrouvent ici.</p>
+
+    <div class="field">
+      <i class="ti ti-user"></i>
+      <input id="name-input" type="text" placeholder="Ton pseudo" maxlength="20" autocomplete="off" />
+    </div>
+    <div class="field">
+      <i class="ti ti-key"></i>
+      <input id="pass-input" type="password" placeholder="Mot de passe de la salle" maxlength="40" autocomplete="off"
+             onkeydown="if(event.key==='Enter')joinRoom()" />
+    </div>
+    <button class="btn-primary" onclick="joinRoom()">
+      <i class="ti ti-arrow-right"></i> Rejoindre la salle
+    </button>
+
+    <div class="err" id="err-msg"></div>
+    <p class="hint">Pas encore de salle ? Elle sera créée automatiquement.<br>Partage le mot de passe avec tes amis — <span>c'est tout</span>.</p>
+  </div>
+</div>
+
+<!-- ── CHAT SCREEN ── -->
+<div class="screen" id="chat-screen">
+  <div class="chat-wrap">
+    <div class="chat-header">
+      <div class="room-icon"><i class="ti ti-message-circle"></i></div>
+      <div>
+        <div class="room-name" id="room-display">—</div>
+        <div class="room-sub">
+          <span class="dot" id="dot"></span>
+          <span id="online-count">1</span> en ligne
+        </div>
+      </div>
+      <button class="btn-leave" onclick="leaveRoom()">
+        <i class="ti ti-logout"></i> Quitter
+      </button>
+    </div>
+
+    <div class="messages" id="messages">
+      <div class="empty-state">
+        <i class="ti ti-message-off"></i>
+        <span>Aucun message.<br>Sois le premier à parler !</span>
+      </div>
+    </div>
+
+    <div class="chat-footer">
+      <input id="msg-input" type="text" placeholder="Écris un message…" maxlength="400" autocomplete="off"
+             onkeydown="if(event.key==='Enter')sendMsg()" />
+      <button class="btn-send" onclick="sendMsg()" title="Envoyer">
+        <i class="ti ti-send"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─────────────────────────────────────────
+//  THEME TOGGLE
+// ─────────────────────────────────────────
+let isDay = false;
+function toggleTheme() {
+  isDay = !isDay;
+  document.body.classList.toggle('day', isDay);
+  document.getElementById('theme-icon').className = isDay ? 'ti ti-moon' : 'ti ti-sun';
+}
+
+// ─────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────
+const STORE = 'salle_secrete_v2';
+const HEARTBEAT_MS  = 2000;   // ping toutes les 2s
+const TIMEOUT_MS    = 6000;   // mort si pas de ping depuis 6s
+const POLL_MS       = 1500;   // refresh UI
+
+let myName = '';
+let myRoom = '';
+let pollTimer = null;
+let heartTimer = null;
+let lastCount = 0;
+
+// ─────────────────────────────────────────
+//  STORAGE HELPERS
+// ─────────────────────────────────────────
+function load() {
+  try { return JSON.parse(localStorage.getItem(STORE) || '{}'); } catch { return {}; }
+}
+function save(data) {
+  try { localStorage.setItem(STORE, JSON.stringify(data)); } catch {}
+}
+
+function getRoom(data, key) {
+  if (!data[key]) data[key] = { messages: [], users: {} };
+  return data[key];
+}
+
+// ─────────────────────────────────────────
+//  JOIN / LEAVE
+// ─────────────────────────────────────────
+function joinRoom() {
+  const name = document.getElementById('name-input').value.trim();
+  const pass = document.getElementById('pass-input').value.trim();
+  const err  = document.getElementById('err-msg');
+  if (!name) { err.textContent = 'Entre ton pseudo.'; return; }
+  if (name.length < 2) { err.textContent = 'Pseudo trop court (min 2 caractères).'; return; }
+  if (!pass) { err.textContent = 'Entre un mot de passe.'; return; }
+  err.textContent = '';
+
+  myName = name;
+  myRoom = pass;
+
+  // Enregistre l'utilisateur
+  let data = load();
+  let room = getRoom(data, myRoom);
+  room.users[myName] = Date.now();
+  addSysMsg(data, `${myName} a rejoint la salle. 👋`);
+  save(data);
+
+  // Affiche le chat
+  document.getElementById('room-display').textContent = '🔒 ' + myRoom;
+  switchScreen('chat-screen');
+  renderMessages();
+
+  // Lance les timers
+  heartTimer = setInterval(heartbeat, HEARTBEAT_MS);
+  pollTimer  = setInterval(tick, POLL_MS);
+}
+
+function leaveRoom() {
+  clearInterval(heartTimer);
+  clearInterval(pollTimer);
+
+  let data = load();
+  if (data[myRoom]) {
+    delete data[myRoom].users[myName];
+    // Si plus personne → on efface les messages
+    const alive = activeUsers(data[myRoom].users);
+    if (alive.length === 0) {
+      data[myRoom].messages = [];
+      showToast('Salle vide — messages effacés.');
+    } else {
+      addSysMsg(data, `${myName} a quitté la salle.`);
+    }
+    save(data);
+  }
+
+  myName = ''; myRoom = ''; lastCount = 0;
+  switchScreen('login-screen');
+  document.getElementById('msg-input').value = '';
+}
+
+// Fermeture de l'onglet / refresh
+window.addEventListener('beforeunload', () => {
+  if (!myName || !myRoom) return;
+  let data = load();
+  if (!data[myRoom]) return;
+  delete data[myRoom].users[myName];
+  const alive = activeUsers(data[myRoom].users);
+  if (alive.length === 0) data[myRoom].messages = [];
+  else addSysMsg(data, `${myName} a quitté la salle.`);
+  save(data);
+});
+
+// ─────────────────────────────────────────
+//  HEARTBEAT — maintient la présence
+// ─────────────────────────────────────────
+function heartbeat() {
+  if (!myRoom) return;
+  let data = load();
+  let room = getRoom(data, myRoom);
+  room.users[myName] = Date.now();
+  save(data);
+}
+
+// ─────────────────────────────────────────
+//  TICK — synchronise l'UI
+// ─────────────────────────────────────────
+function tick() {
+  if (!myRoom) return;
+  let data = load();
+  let room  = getRoom(data, myRoom);
+
+  // Nettoie les utilisateurs morts
+  let changed = false;
+  for (const [u, ts] of Object.entries(room.users)) {
+    if (Date.now() - ts > TIMEOUT_MS) {
+      delete room.users[u];
+      // si quelqu'un est mort sans laisser de message de départ
+      addSysMsg(data, `${u} a été déconnecté.`);
+      changed = true;
+    }
+  }
+
+  // Si plus personne (sans moi-même), on efface
+  const others = Object.keys(room.users).filter(u => u !== myName);
+  const aliveCount = others.length + 1; // +1 pour moi
+
+  if (changed) {
+    const aliveAfter = activeUsers(room.users);
+    if (aliveAfter.length === 0) room.messages = [];
+    save(data);
+  }
+
+  // Met à jour l'UI online
+  document.getElementById('online-count').textContent = aliveCount;
+  const dot = document.getElementById('dot');
+  if (aliveCount > 1) { dot.classList.remove('red'); }
+  else { dot.classList.add('red'); }
+
+  // Refresh messages si changement
+  const msgs = (data[myRoom] || {}).messages || [];
+  if (msgs.length !== lastCount) {
+    renderMessages();
+    lastCount = msgs.length;
+  }
+}
+
+// ─────────────────────────────────────────
+//  MESSAGES
+// ─────────────────────────────────────────
+function sendMsg() {
+  const inp  = document.getElementById('msg-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = '';
+
+  let data = load();
+  let room = getRoom(data, myRoom);
+  room.messages.push({ type: 'msg', author: myName, text, ts: Date.now() });
+  if (room.messages.length > 300) room.messages = room.messages.slice(-300);
+  save(data);
+  renderMessages();
+  lastCount = room.messages.length;
+}
+
+function addSysMsg(data, text) {
+  let room = getRoom(data, myRoom);
+  room.messages.push({ type: 'sys', text, ts: Date.now() });
+}
+
+function renderMessages() {
+  let data = load();
+  const msgs = (data[myRoom] || {}).messages || [];
+  const el   = document.getElementById('messages');
+  lastCount  = msgs.length;
+
+  if (msgs.length === 0) {
+    el.innerHTML = `<div class="empty-state"><i class="ti ti-message-off"></i><span>Aucun message.<br>Sois le premier à parler !</span></div>`;
+    return;
+  }
+
+  el.innerHTML = '';
+  msgs.forEach(m => {
+    if (m.type === 'sys') {
+      const d = document.createElement('div');
+      d.className = 'sys-msg';
+      d.textContent = m.text;
+      el.appendChild(d);
+      return;
+    }
+    const isMe = m.author === myName;
+    const wrap = document.createElement('div');
+    wrap.className = 'msg' + (isMe ? ' me' : '');
+    const initials = m.author.slice(0, 2).toUpperCase();
+    wrap.innerHTML = `
+      <div class="avatar">${initials}</div>
+      <div class="msg-body">
+        <div class="msg-meta">${isMe ? 'Toi' : esc(m.author)} · ${fmt(m.ts)}</div>
+        <div class="bubble">${esc(m.text)}</div>
+      </div>`;
+    el.appendChild(wrap);
+  });
+
+  el.scrollTop = el.scrollHeight;
+}
+
+// ─────────────────────────────────────────
+//  UTILS
+// ─────────────────────────────────────────
+function activeUsers(usersObj) {
+  return Object.entries(usersObj).filter(([, ts]) => Date.now() - ts <= TIMEOUT_MS).map(([u]) => u);
+}
+
+function fmt(ts) {
+  const d = new Date(ts);
+  return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+}
+
+function esc(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function switchScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
